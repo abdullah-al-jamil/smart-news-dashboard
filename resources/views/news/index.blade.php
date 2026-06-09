@@ -13,13 +13,13 @@
                 
                 <!-- Buttons -->
                 <div class="flex gap-2 mt-3">
-                    <button @click="summarize(article.content || article.description)" class="bg-blue-500 text-white px-2 py-1 rounded text-sm">🤖 Summarize</button>
+                    <button @click="summarize(article)" class="bg-blue-500 text-white px-2 py-1 rounded text-sm">🤖 Summarize</button>
                     <button @click="openChat(article)" class="bg-green-500 text-white px-2 py-1 rounded text-sm">💬 Ask AI</button>
                     <button @click="bookmark(article)" class="bg-yellow-500 text-white px-2 py-1 rounded text-sm">⭐ Save</button>
                 </div>
                 
                 <!-- Summary display -->
-                <div x-show="summary" x-html="summary" class="mt-2 text-sm bg-gray-100 p-2 rounded"></div>
+                <div x-show="article.summary" x-html="article.summary" class="mt-2 text-sm bg-gray-100 p-2 rounded"></div>
             </div>
         </template>
     </div>
@@ -39,8 +39,7 @@
 <script>
 function newsApp() {
     return {
-        articles: @json($articles),
-        summary: '',
+        articles: @json($articles).map(a => ({ ...a, summary: '' })),
         chatOpen: false,
         currentArticle: null,
         question: '',
@@ -48,15 +47,15 @@ function newsApp() {
         init() {
             console.log('News feed loaded');
         },
-        async summarize(content) {
+        async summarize(article) {
             const response = await fetch('{{ route("ai.summarize") }}', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
-                body: JSON.stringify({ content: content })
+                body: JSON.stringify({ content: article.content || article.description })
             });
             const data = await response.json();
-            this.summary = `<strong>Summary:</strong> ${data.summary}`;
-            setTimeout(() => { this.summary = ''; }, 10000); // auto-hide after 10s
+            article.summary = `<strong>Summary:</strong> ${data.summary}`;
+            setTimeout(() => { article.summary = ''; }, 10000);
         },
         openChat(article) {
             this.currentArticle = article;
@@ -77,9 +76,6 @@ function newsApp() {
             this.answer = data.answer;
         },
         async bookmark(article) {
-            // First, store article in DB via a separate endpoint (not shown for brevity)
-            // Or directly call /bookmark with article URL as identifier.
-            // For simplicity, we assume you have an endpoint that saves the article on the fly.
             const response = await fetch(`/bookmark/${article.url}`, { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content } });
             const data = await response.json();
             alert(data.bookmarked ? 'Saved' : 'Removed');
