@@ -25,7 +25,7 @@
     </div>
 
     <!-- Chat modal -->
-    <div x-show="chatOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div x-show="chatOpen" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded p-6 w-96">
             <h3 class="font-bold">Ask about: <span x-text="currentArticle?.title"></span></h3>
             <input type="text" x-model="question" placeholder="Your question..." class="border p-2 w-full mt-2">
@@ -48,6 +48,7 @@ function newsApp() {
             console.log('News feed loaded');
         },
         async summarize(article) {
+            console.log('article:', article);
             const response = await fetch('{{ route("ai.summarize") }}', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
