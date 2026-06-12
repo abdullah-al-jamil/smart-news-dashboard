@@ -3,12 +3,28 @@
 @section('content')
 <div x-data="newsApp()" x-init="init()">
     <h1 class="text-2xl font-bold mb-4">📰 {{ ucfirst($category) }} News</h1>
-    
+
+    <form method="GET" action="{{ route('news.index') }}" class="mb-4">
+        <select name="category" onchange="this.form.submit()" class="border rounded p-2">
+            <option value="business" {{ request('category') == 'business' ? 'selected' : '' }}>Business</option>
+            <option value="entertainment" {{ request('category') == 'entertainment' ? 'selected' : '' }}>Entertainment</option>
+            <option value="general" {{ request('category', 'general') == 'general' ? 'selected' : '' }}>General</option>
+            <option value="health" {{ request('category') == 'health' ? 'selected' : '' }}>Health</option>
+            <option value="science" {{ request('category') == 'science' ? 'selected' : '' }}>Science</option>
+            <option value="sports" {{ request('category') == 'sports' ? 'selected' : '' }}>Sports</option>
+            <option value="technology" {{ request('category') == 'technology' ? 'selected' : '' }}>Technology</option>
+        </select>
+    </form>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <template x-for="(article, idx) in articles" :key="idx">
             <div class="bg-white rounded shadow p-4">
-                <img :src="article.urlToImage || 'https://via.placeholder.com/300'" class="w-full h-48 object-cover rounded">
-                <h2 class="font-bold text-lg mt-2" x-text="article.title"></h2>
+                <a :href="article.url" target="_blank" rel="noopener noreferrer" class="block">
+                    <img :src="article.urlToImage || 'https://via.placeholder.com/300'" class="w-full h-48 object-cover rounded">
+                </a>
+                <a :href="article.url" target="_blank" rel="noopener noreferrer" class="block">
+                    <h2 class="font-bold text-lg mt-2" x-text="article.title"></h2>
+                </a>
                 <p class="text-gray-600 text-sm" x-text="article.description"></p>
                 
                 <!-- Buttons -->
