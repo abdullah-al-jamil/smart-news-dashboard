@@ -31,7 +31,7 @@
                 <div class="flex gap-2 mt-3">
                     <button @click="summarize(article)" class="bg-blue-500 text-white px-2 py-1 rounded text-sm">🤖 Summarize</button>
                     <button @click="openChat(article)" class="bg-green-500 text-white px-2 py-1 rounded text-sm">💬 Ask AI</button>
-                    <button @click="bookmark(article)" class="bg-yellow-500 text-white px-2 py-1 rounded text-sm">⭐ Save</button>
+                    {{-- <button @click="bookmark(article)" class="bg-yellow-500 text-white px-2 py-1 rounded text-sm">⭐ Save</button> --}}
                 </div>
                 
                 <!-- Summary display -->
