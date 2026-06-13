@@ -17,6 +17,7 @@ RUN apk add --no-cache nginx \
     && docker-php-ext-install -j$(nproc) bcmath
 COPY --from=composer /app /var/www/html
 COPY --from=node /app/public/build /var/www/html/public/build
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh

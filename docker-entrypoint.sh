@@ -3,6 +3,7 @@ set -e
 
 sed -i "s/__PORT__/${PORT:-8080}/g" /etc/nginx/nginx.conf
 
+chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
 cp .env.example .env
